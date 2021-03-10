@@ -1,0 +1,85 @@
+{
+  "ingredients": [
+    {
+      "id": 1,
+      "name": "json-server",
+      "proteins": "typicode",
+      "fats": "typicode",
+      "carbohydrates": "typicode"
+    },
+    {
+      "name": "dsfs",
+      "proteins": "sdf",
+      "fats": "dfgdfg",
+      "carbohydrates": "dfgdfg",
+      "id": 2
+    },
+    {
+      "name": "333",
+      "proteins": "sdfsdfg",
+      "fats": "sdfsd",
+      "carbohydrates": "sdf",
+      "id": 3
+    }
+  ],
+  "recipes": [
+    {
+      "id": 11,
+      "name": "nameb",
+      "ingredients": [
+        10,
+        11
+      ]
+    },
+    {
+      "name": "fghfh",
+      "ingredients": [
+        4
+      ],
+      "id": 12
+    },
+    {
+      "name": "fghfh",
+      "ingredients": [
+        4
+      ],
+      "id": 13
+    },
+    {
+      "name": "fdgdf",
+      "ingredients": [
+        14
+      ],
+      "id": 14
+    },
+    {
+      "name": "fgdfg",
+      "ingredients": [
+        13,
+        18
+      ],
+      "id": 15
+    },
+    {
+      "name": "new",
+      "ingredients": [
+        1,
+        20,
+        21,
+        4,
+        3,
+        4,
+        3
+      ],
+      "id": 16
+    },
+    {
+      "name": "new",
+      "ingredients": [
+        1,
+        3
+      ],
+      "id": 17
+    }
+  ]
+}
