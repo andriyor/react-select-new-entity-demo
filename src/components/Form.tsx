@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useRouteMatch } from 'react-router-dom';
-import { useDebounce } from 'use-debounce';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useHistory } from 'react-router-dom';
 
 import Select from 'react-select';
+import useEventListener from '@use-it/event-listener';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, IconButton, TextField } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
@@ -20,11 +19,10 @@ import { MainForm } from '../types/MainForm';
 const Form = () => {
   const form = useSelector((state: RootState) => state.form.form);
   const mainForm = useSelector((state: RootState) => state.form.mainForm);
-  const { control, handleSubmit, formState, watch, getValues, reset, setValue } = useForm<MainForm>();
+  const { control, handleSubmit, getValues, reset, setValue } = useForm<MainForm>();
+  const {push} = useHistory();
   const [options, setOptions] = useState<Ingredient[]>([]);
-  const [formValue, setFormValue] = useState<MainForm>();
   const dispatch = useDispatch();
-  const [value] = useDebounce(formValue, 300);
 
   const onSubmit = (data: MainForm) => {
     createRecipe(data).then((data) => {
@@ -37,15 +35,9 @@ const Form = () => {
     fetchIngredients().then((ingredients) => setOptions(ingredients.map(toOption)));
   }, []);
 
-  useEffect(() => {
-    if (value) {
-      dispatch(setMainForm(value));
-    }
-  }, [value]);
-
-  useDeepCompareEffect(() => {
-    setFormValue(getValues());
-  }, [watch()]);
+  useEventListener('beforeunload', () => {
+    dispatch(setMainForm(getValues()));
+  });
 
   const toOption = (ingredient: Ingredient) => {
     return { id: ingredient.id, value: ingredient.id, label: getOptionLabel(ingredient) };
@@ -69,6 +61,11 @@ const Form = () => {
       return [];
     }
   };
+
+  const handleNew = () => {
+    dispatch(setMainForm(getValues()));
+    push('/new')
+  }
 
   return (
     <div>
@@ -105,7 +102,7 @@ const Form = () => {
             />
           </div>
           <div>
-            <IconButton component={Link} to="/new" aria-label="delete">
+            <IconButton onClick={handleNew} aria-label="delete">
               <AddCircleOutlineIcon />
             </IconButton>
           </div>

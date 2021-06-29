@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 
+import useEventListener from '@use-it/event-listener';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -10,25 +11,21 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { clearNestedForm, setForm, setNestedForm } from '../redux/formSlice';
 import { Ingredient } from '../types/Ingredient';
 import { saveIngredient } from '../rest/ingredient';
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { useDebounce } from 'use-debounce';
 import { RootState } from '../redux/rootReducer';
 
 const NestedForm = () => {
-  const { control, handleSubmit, watch, getValues, reset } = useForm<Ingredient>();
+  const { control, handleSubmit, getValues, reset } = useForm<Ingredient>();
   const nestedForm = useSelector((state: RootState) => state.form.nestedForm);
-  const [formValue, setFormValue] = useState<Ingredient>();
   const dispatch = useDispatch();
   const history = useHistory();
-  const [value] = useDebounce(formValue, 300);
 
   useEffect(() => {
     reset(nestedForm);
   }, []);
 
-  useEffect(() => {
-    dispatch(setNestedForm(value));
-  }, [value]);
+  useEventListener('beforeunload', () => {
+    dispatch(setNestedForm(getValues()));
+  });
 
   const onSubmit = (data: Ingredient) => {
     saveIngredient(data).then((data) => {
@@ -37,10 +34,6 @@ const NestedForm = () => {
       history.push('..');
     });
   };
-
-  useDeepCompareEffect(() => {
-    setFormValue(getValues());
-  }, [watch()]);
 
   return (
     <div>
